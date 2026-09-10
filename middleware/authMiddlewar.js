@@ -39,3 +39,19 @@ exports.authorizeRole = (role) => {
     next();
   };
 };
+
+exports.checkOwnership = async (req, res, next) => {
+  
+    const { id } = req.params;
+    if (req.user.id === id || req.user.role === "admin") {
+      next();
+    } else {
+      return res
+        .status(403)
+        .json({
+          message:
+            "Access denied. You do not have permission to perform this action.",
+        });
+    }
+  
+};
