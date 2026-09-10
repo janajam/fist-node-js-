@@ -1,17 +1,15 @@
+const jwt = require("jsonwebtoken");
 
-const jwt=require('jsonwebtoken')
-const User=require('../model/userModel')
+exports.verifyToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
 
-exports.verifyToken=async(req,res,next)=>{
-    try{
-    const authHeader=req.headers.authorization
-
-      if (!authHeader) {
+    if (!authHeader) {
       return res.status(401).json({
         message: "No token provided",
       });
     }
-const token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -23,12 +21,19 @@ const token = authHeader.split(" ")[1];
     req.user = decoded;
 
     next();
-  }
-   catch (error) {
+  } catch (error) {
     return res.status(401).json({
       message: "Invalid or expired token",
     });
   }
-}
-module.exports = authMiddleware
+};
 
+exports.authAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      message: "Access denied. Admins only.",
+    });
+  }
+
+  next();
+};
