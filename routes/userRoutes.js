@@ -9,4 +9,5 @@ router.get('/users/:id',verifyToken,checkOwnership,getUserById)
 router.put('/users/:id',updateUser)
 router.delete('/users/:id',deleteUser)
 
+
 module.exports = router;
