@@ -55,3 +55,30 @@ exports.checkOwnership = async (req, res, next) => {
     }
   
 };
+
+
+
+
+exports.verifyRefreshToken =  (req, res, next) => {
+  try {
+    const refreshToken = req.body.refreshToken;
+
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "Invalid authorization format",
+      });
+    }
+    
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    req.user = decoded;
+    req.refreshToken = refreshToken;
+    
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid or expired token",
+    });
+  }
+};
