@@ -12,8 +12,4 @@ exports.registerValidator = [
   body("password")
     .isLength({ min: 6 })
     .withMessage("password must be at least 6 characters "),
-];ed
-vbxt6rcy7ybjfyy7u      d g r5v5yyilp']]
-]/
-gggh
-]''
+];
