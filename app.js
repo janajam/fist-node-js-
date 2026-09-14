@@ -5,11 +5,88 @@ const router = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoute");
 const meRouter=require('./routes/meRoute')
 
-dotenv.config();
+// const morgan = require('morgan');
+// const cookieParser = require("cookie-parser");
+// const path = require('path');
+// const globalError = require('./middlewares/errorMiddleware');
+// const cors = require('cors');
+// const mountRoutes = require('./routes');
+
+
+// Winston Logging Middlewares
+// const correlationId = require("./middlewares/correlationId");
+// const requestLogger = require("./middlewares/requestLogger");
+// const errorLogger = require("./middlewares/errorLogger");
+
+
 const app = express();
+
+
+// ------------------------------------------------------
+// CORS
+// -----------------------------------------------------
+// app.use(
+//   cors({
+
+//     origin: "http://localhost:5173",
+//     credentials: true
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// ); 
+
+
+// app.options("*", cors());
+
+
+
+dotenv.config();
 const PORT = process.env.PORT || 8000;
 const MONGOURI = process.env.MONGO_URI;
-app.use(express.json());
+
+
+
+// Body parser
+app.use(express.json({ limit: '20kb' }));
+// app.use(express.static(path.join(__dirname, 'uploads')));
+
+// Compress responses
+// app.use(compression());
+
+
+// Cookie parser
+// app.use(cookieParser());
+
+
+// ------------------------------------------------------
+// Mount routes AFTER injecting req.io
+// ------------------------------------------------------
+// mountRoutes(app);n
+
+// Handle unknown routes
+// app.all('*', (req, res, next) => {
+//   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 404));
+// });
+
+// Morgan (development only)
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
+
+
+// Log every request (Winston)
+// app.use(requestLogger);
+
+
+// Add Correlation ID FIRST
+// app.use(correlationId);
+
+// Winston Error Logger
+// app.use(errorLogger);
+
+
+// Global error handler
+// app.use(globalError);
 
 mongoose
   .connect(MONGOURI)
