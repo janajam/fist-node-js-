@@ -1,7 +1,9 @@
-const{ rateLimit } =require('express-rate-limit')
+const { rateLimit } = require("express-rate-limit");
 
 exports.loginLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 5, 
-    message: 'Too many requests from this IP, please try again after 15 minutes',
-})
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requests, please try again later.",
+});
