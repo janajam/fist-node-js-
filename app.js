@@ -10,7 +10,7 @@ const helmet = require("helmet");
 // const cookieParser = require("cookie-parser");
 // const path = require('path');
 // const globalError = require('./middlewares/errorMiddleware');
-// const cors = require('cors');
+const cors = require('cors');
 // const mountRoutes = require('./routes');
 
 
@@ -26,18 +26,18 @@ const app = express();
 // ------------------------------------------------------
 // CORS
 // -----------------------------------------------------
-// app.use(
-//   cors({
+app.use(
+  cors({
 
-//     origin: "http://localhost:5173",
-//     credentials: true
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   })
-// ); 
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+); 
 
 
-// app.options("*", cors());
+app.options("*", cors());
 
 
 
