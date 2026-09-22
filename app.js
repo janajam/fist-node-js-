@@ -4,7 +4,8 @@ const dotenv = require("dotenv");
 const router = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoute");
 const meRouter=require('./routes/meRoute')
-
+const { loginLimiter } = require("./middleware/rateLimitMiddleware");
+const helmet = require("helmet");
 // const morgan = require('morgan');
 // const cookieParser = require("cookie-parser");
 // const path = require('path');
@@ -49,10 +50,19 @@ const MONGOURI = process.env.MONGO_URI;
 // Body parser
 app.use(express.json({ limit: '20kb' }));
 // app.use(express.static(path.join(__dirname, 'uploads')));
-
+app.use(loginLimiter)
 // Compress responses
 // app.use(compression());
-
+// app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: ["'self'"],
+      },
+    },
+  })
+);
 
 // Cookie parser
 // app.use(cookieParser());
