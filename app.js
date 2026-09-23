@@ -7,7 +7,7 @@ const meRouter=require('./routes/meRoute')
 const { loginLimiter } = require("./middleware/rateLimitMiddleware");
 const helmet = require("helmet");
 // const morgan = require('morgan');
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 // const path = require('path');
 // const globalError = require('./middlewares/errorMiddleware');
 const cors = require('cors');
@@ -32,12 +32,12 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization","X-CSRF-Token"],
   })
 ); 
 
 
-app.options("*", cors());
+// app.options("*", cors());
 
 
 
@@ -65,13 +65,13 @@ app.use(
 );
 
 // Cookie parser
-// app.use(cookieParser());
+app.use(cookieParser());
 
 
 // ------------------------------------------------------
 // Mount routes AFTER injecting req.io
 // ------------------------------------------------------
-// mountRoutes(app);n
+// mountRoutes(app);
 
 // Handle unknown routes
 // app.all('*', (req, res, next) => {

@@ -61,17 +61,17 @@ exports.checkOwnership = async (req, res, next) => {
 
 exports.verifyRefreshToken =  (req, res, next) => {
   try {
-    const refreshToken = req.body.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
 
     if (!refreshToken) {
       return res.status(401).json({
-        message: "Invalid authorization format",
+        message: "Refresh token not found",
       });
     }
     
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET,revoked=false);
     req.user = decoded;
     req.refreshToken = refreshToken;
     
@@ -82,3 +82,14 @@ exports.verifyRefreshToken =  (req, res, next) => {
     });
   }
 };
+
+exports.verifyCSRFToken = (req, res, next) => {
+  
+  const cookie=req.cookies.csrfToken
+  const header=req.headers["x-csrf-token"]
+  if (!cookie || !header || cookie !== header) {
+    return res.status(403).json('invalid token ')
+  }
+next()
+  
+}

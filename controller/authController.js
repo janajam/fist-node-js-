@@ -1,6 +1,7 @@
 const User = require("../model/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const RefreshToken = require("../model/refrreshTokenModel");
 
 exports.register = async (req, res) => {
@@ -77,10 +78,17 @@ exports.login = async (req, res) => {
     });
     await refreshTokenDoc.save();
 
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      path: "/api/auth",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     return res.status(200).json({
       message: "User logged in successfully",
       accessToken,
-      refreshToken,
+      // refreshToken,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -100,7 +108,7 @@ exports.refreshAccessToken = async (req, res) => {
       revoked: false,
     });
     if (!tokenExist) {
-      return res.status(400).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
 
     if (tokenExist.expiresAt < new Date()) {
@@ -122,18 +130,15 @@ exports.refreshAccessToken = async (req, res) => {
   }
 };
 
-
-
-
 exports.logout = async (req, res) => {
-  try{
+  try {
     const id = req.user.id;
-    const token =req.refreshToken;
+    const token = req.refreshToken;
     const tokenExist = await RefreshToken.findOne({
       token: token,
       user: id,
-    revoked: false,
-    })
+      revoked: false,
+    });
 
     if (!tokenExist) {
       return res.status(400).json({ message: "Invalid refresh token" });
@@ -143,9 +148,20 @@ exports.logout = async (req, res) => {
     await tokenExist.save();
 
     return res.status(200).json({ message: "User logged out successfully" });
-
-  }
-  catch(error){
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-}
+};
+
+exports.createCSRFToken = (req, res) => {
+  const csrfToken = crypto.randomBytes(32).toString("hex");
+  res.cookie("csrfToken", csrfToken, {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+  return res.status(200).json({
+  message: "CSRF token created successfully",
+
+});
+};
