@@ -31,10 +31,21 @@ const enrollmentSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-
 enrollmentSchema.index(
-  { student: 1, course: 1 },
-  { unique: true }
+  {
+    student: 1,
+    course: 1,
+  },
+  {
+    unique: true,
+  }
 );
+
+enrollmentSchema.index({
+  course: 1,
+  completed: 1,
+  enrolledAt: -1,
+});
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
+
 module.exports = Enrollment;
