@@ -13,7 +13,7 @@ const cookieParser = require("cookie-parser");
 const cors = require('cors');
 // const mountRoutes = require('./routes');
 
-
+const hpp=require('hpp')
 // Winston Logging Middlewares
 // const correlationId = require("./middlewares/correlationId");
 // const requestLogger = require("./middlewares/requestLogger");
@@ -44,7 +44,7 @@ app.use(
 dotenv.config();
 const PORT = process.env.PORT || 8000;
 const MONGOURI = process.env.MONGO_URI;
-
+app.use(hpp());
 
 
 // Body parser
