@@ -4,12 +4,15 @@ const {verifyToken,authorizeRole,checkOwnership}=require('../middleware/authMidd
 const router = express.Router();
 const { createCSRFToken } = require('../controller/authController');
 const { testEnrollmentQuery } = require('../controller/enrollmentController');
+const { pagenationCourse } = require('../controller/courseController');
 router.post('/users', createUser);
 router.get('/users',verifyToken,authorizeRole('admin'),getAllUsers)
 router.get('/users/:id',verifyToken,checkOwnership,getUserById)
 router.put('/users/:id',updateUser)
 router.delete('/users/:id',deleteUser)
 router.get('/enrollments/test/:courseId', testEnrollmentQuery)
+router.get('/courses',pagenationCourse)
 router.get('/csrf-token',createCSRFToken)
+
 
 module.exports = router;
